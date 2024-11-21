@@ -33,7 +33,7 @@ class LoginButton extends StatelessWidget {
             );
 
             if (user != null) {
-              Navigator.pushReplacementNamed(context, '/home');
+              Navigator.pushReplacementNamed(context, '/allset');
             }
           } else {
             ScaffoldMessenger.of(context).showSnackBar(

@@ -21,7 +21,7 @@ class LoginWith extends StatelessWidget {
               final firebaseAuthService = FirebaseAuthService();
               final user = await firebaseAuthService.signInWithGoogle(context);
               if (user != null) {
-                Navigator.pushReplacementNamed(context, '/home');
+                Navigator.pushReplacementNamed(context, '/allset');
               }
             },
             child: CircleAvatar(
