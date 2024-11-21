@@ -43,7 +43,7 @@ class LetinPage extends StatelessWidget {
                 // Login Button
                 ElevatedButton(
                   onPressed: () {
-                    //Navigator.pushReplacementNamed(context, '/login');
+                    Navigator.pushReplacementNamed(context, '/login');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF7AB8D3),

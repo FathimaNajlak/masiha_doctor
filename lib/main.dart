@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:masiha_doctor/firebase_options.dart';
 import 'package:masiha_doctor/screens/login_signup/let_in.dart';
+import 'package:masiha_doctor/screens/login_signup/login_screen.dart';
 import 'package:masiha_doctor/screens/splash_screen.dart';
 
 void main() async {
@@ -20,7 +21,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      routes: {'/letin': (context) => const LetinPage()},
+      routes: {
+        '/letin': (context) => const LetinPage(),
+        '/login': (context) => LoginScreen(),
+      },
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
