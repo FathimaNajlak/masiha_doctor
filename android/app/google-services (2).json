@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "123369036375",
+    "project_id": "student-record-edcdf",
+    "storage_bucket": "student-record-edcdf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123369036375:android:3fc8b449a17697a302e112",
+        "android_client_info": {
+          "package_name": "com.example.masiha_doctor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123369036375-61p5m9o3ekltsnu97o8c68djpfo35m3b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB3FmncO4uGWfXNkyTq0siezVq93A7idA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123369036375-61p5m9o3ekltsnu97o8c68djpfo35m3b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "123369036375-dq18nd0b30ojd258i4irvrvt8oqhv17s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.masihaUser"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123369036375:android:274e8d2281c942ff02e112",
+        "android_client_info": {
+          "package_name": "com.example.masiha_user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123369036375-osjjke81a3dairt7thapitboqles3j9n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.masiha_user",
+            "certificate_hash": "db3f91af7da80b1e884a02ad033f57ba5c505b02"
+          }
+        },
+        {
+          "client_id": "123369036375-61p5m9o3ekltsnu97o8c68djpfo35m3b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB3FmncO4uGWfXNkyTq0siezVq93A7idA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123369036375-61p5m9o3ekltsnu97o8c68djpfo35m3b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "123369036375-dq18nd0b30ojd258i4irvrvt8oqhv17s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.masihaUser"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
