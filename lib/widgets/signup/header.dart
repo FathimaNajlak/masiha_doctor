@@ -10,7 +10,7 @@ class Header extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/home');
+            Navigator.pushReplacementNamed(context, '/login');
           },
         ),
         const SizedBox(width: 8),

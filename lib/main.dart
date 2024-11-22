@@ -4,6 +4,7 @@ import 'package:masiha_doctor/firebase_options.dart';
 import 'package:masiha_doctor/providers/login_provider.dart';
 import 'package:masiha_doctor/screens/home/home.dart';
 import 'package:masiha_doctor/screens/login_signup/all_set.dart';
+import 'package:masiha_doctor/screens/login_signup/forgot_pass_screen.dart';
 import 'package:masiha_doctor/screens/login_signup/let_in.dart';
 import 'package:masiha_doctor/screens/login_signup/login_screen.dart';
 import 'package:masiha_doctor/screens/login_signup/signup_screen.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/signup': (context) => SignupScreen(),
         '/allset': (context) => const AllSetScreen(),
+        '/forgotpass': (context) => const ForgotPasswordScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,
