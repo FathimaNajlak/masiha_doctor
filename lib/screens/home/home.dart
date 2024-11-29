@@ -7,16 +7,12 @@ class HomeScreen extends StatelessWidget {
 
   Future<void> _signOut(BuildContext context) async {
     try {
-      // Sign out from Firebase
       await FirebaseAuth.instance.signOut();
 
-      // Sign out from Google
       await GoogleSignIn().signOut();
 
-      // Navigate back to login screen
       Navigator.pushReplacementNamed(context, '/login');
     } catch (error) {
-      // Handle any errors during sign out
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Sign out failed: $error')),
       );
@@ -31,7 +27,7 @@ class HomeScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           color: Colors.black,
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/login');
+            Navigator.pop(context);
           },
         ),
         title: const Text('Home Screen'),
@@ -46,7 +42,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text("Home Screen"),
+            const Text(" Yor details are successfully saved"),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _signOut(context),

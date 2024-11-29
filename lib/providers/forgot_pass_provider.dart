@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:masiha_doctor/screens/login_signup/set_pass_screen.dart';
 
 class ForgotPasswordProvider extends ChangeNotifier {
   String _email = '';
@@ -26,20 +27,16 @@ class ForgotPasswordProvider extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
 
-      // Simulate API call
       await Future.delayed(const Duration(seconds: 2));
 
       _isLoading = false;
       notifyListeners();
 
-      // Navigate to another page
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) =>
-      //         const SetPasswordScreen(), // Replace with your target page
-      //   ),
-      // );
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SetPasswordScreen(),
+          ));
     } catch (e) {
       _isLoading = false;
       _errorMessage = 'An error occurred. Please try again.';

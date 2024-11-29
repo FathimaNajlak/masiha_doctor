@@ -15,7 +15,7 @@ class LetinPage extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [
               Colors.white,
-              AppColors.lightcolor, // Light blue background at bottom
+              AppColors.lightcolor,
             ],
           ),
         ),
@@ -40,7 +40,6 @@ class LetinPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
 
-                // Login Button
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushReplacementNamed(context, '/login');
@@ -64,7 +63,6 @@ class LetinPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
 
-                // Sign Up Button
                 TextButton(
                   onPressed: () {
                     Navigator.pushReplacementNamed(context, '/signup');
