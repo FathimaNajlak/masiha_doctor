@@ -1,13 +1,48 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:masiha_doctor/consts/toast.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  // Existing Google Sign-In method
-  Future<User?> signInWithGoogle(BuildContext context) async {
+  Future<User?> signUpWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      UserCredential credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return credential.user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        showToast(message: 'The email address is already in use.');
+      } else {
+        showToast(message: 'An error occurred: ${e.code}');
+      }
+      return null;
+    }
+  }
+
+  Future<User?> signInWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      UserCredential credential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return credential.user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+        showToast(message: 'Invalid email or password.');
+      } else {
+        showToast(message: 'An error occurred: ${e.code}');
+      }
+      return null;
+    }
+  }
+
+  Future<User?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
@@ -26,50 +61,7 @@ class FirebaseAuthService {
 
       return authResult.user;
     } catch (error) {
-      print('Google Sign-In Error: $error');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Google Sign-In failed: $error')),
-      );
-      return null;
-    }
-  }
-
-  // New method for email and password sign in
-  Future<User?> signInWithEmailAndPassword({
-    required BuildContext context,
-    required String email,
-    required String password,
-  }) async {
-    try {
-      final UserCredential authResult = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return authResult.user;
-    } on FirebaseAuthException catch (e) {
-      String errorMessage = 'An error occurred';
-
-      if (e.code == 'user-not-found') {
-        errorMessage = 'No user found for this email.';
-      } else if (e.code == 'wrong-password') {
-        errorMessage = 'Incorrect password.';
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return null;
-    } catch (error) {
-      print('Email Sign-In Error: $error');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Sign-In failed: $error'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      showToast(message: 'Google Sign-In failed: $error');
       return null;
     }
   }
@@ -79,7 +71,7 @@ class FirebaseAuthService {
       await _googleSignIn.signOut();
       await _auth.signOut();
     } catch (error) {
-      print('Sign Out Error: $error');
+      showToast(message: 'Sign Out Error: $error');
     }
   }
 

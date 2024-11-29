@@ -1,7 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:masiha_doctor/firebase_options.dart';
-import 'package:masiha_doctor/providers/login_provider.dart';
+import 'package:masiha_doctor/providers/doc_details.dart';
+import 'package:masiha_doctor/screens/add_details.dart';
 import 'package:masiha_doctor/screens/home/home.dart';
 import 'package:masiha_doctor/screens/login_signup/all_set.dart';
 import 'package:masiha_doctor/screens/login_signup/forgot_pass_screen.dart';
@@ -19,7 +20,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),
@@ -29,18 +30,18 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
         '/letin': (context) => const LetinPage(),
-        '/login': (context) => LoginScreen(),
+        '/login': (context) => const LoginPage(),
         '/home': (context) => const HomeScreen(),
-        '/signup': (context) => SignupScreen(),
+        '/signup': (context) => const SignUpPage(),
         '/allset': (context) => const AllSetScreen(),
         '/forgotpass': (context) => const ForgotPasswordScreen(),
+        '/addDetails': (context) => const UserDetailsPage(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,

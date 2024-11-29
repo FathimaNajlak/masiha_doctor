@@ -1,131 +1,131 @@
 import 'package:flutter/material.dart';
-import 'package:masiha_doctor/providers/signup_provider.dart';
-import 'package:masiha_doctor/widgets/login/login_with.dart';
-import 'package:masiha_doctor/widgets/signup/header.dart';
-import 'package:masiha_doctor/widgets/signup/login.dart';
-import 'package:masiha_doctor/widgets/signup/next_button.dart';
-import 'package:masiha_doctor/widgets/signup/pick_image.dart';
-import 'package:masiha_doctor/widgets/signup/signup_form/signup_form.dart';
-import 'package:masiha_doctor/widgets/signup/terms_and_co.dart';
+import 'package:masiha_doctor/consts/colors.dart';
+import 'package:masiha_doctor/screens/login_signup/login_screen.dart';
+import 'package:masiha_doctor/services/firebase_auth_services.dart';
+import 'package:masiha_doctor/form_container.dart';
+import 'package:masiha_doctor/widgets/signup/existing_acc.dart';
 
-import 'package:provider/provider.dart';
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
-class SignupScreen extends StatelessWidget {
-  SignupScreen({super.key});
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class _SignUpPageState extends State<SignUpPage> {
+  final FirebaseAuthService _auth = FirebaseAuthService();
+
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool isSigningUp = false;
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => SignupProvider(),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Header(),
-                const SizedBox(height: 15),
-                Consumer<SignupProvider>(
-                  builder: (context, provider, _) {
-                    return FormField<String>(
-                      validator: (value) {
-                        if (provider.selectedImage == null) {
-                          return 'Please select a profile image';
-                        }
-                        return null;
-                      },
-                      builder: (FormFieldState<String> state) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ProfileImagePicker(
-                              onImageSelected: (image) {
-                                provider
-                                    .setSelectedImage(image); // Update provider
-                                state.didChange(
-                                    'imageSelected'); // Notify form field of changeA
-                              },
-                            ),
-                            if (state.hasError)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Text(
-                                  state.errorText!,
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.error,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        // title: const Text("SignUp"),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Sign Up",
+                style: TextStyle(
+                    fontSize: 27,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.darkcolor),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              FormContainerWidget(
+                controller: _usernameController,
+                hintText: "Username",
+                isPasswordField: false,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              FormContainerWidget(
+                controller: _emailController,
+                hintText: "Email",
+                isPasswordField: false,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              FormContainerWidget(
+                controller: _passwordController,
+                hintText: "Password",
+                isPasswordField: true,
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              GestureDetector(
+                onTap: () {
+                  const ExistingAcc();
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: AppColors.darkcolor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                      child: isSigningUp
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : const Text(
+                              "Sign Up",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            )),
                 ),
-                const SizedBox(height: 15),
-                SignUpForm(formKey: _formKey),
-                const SizedBox(height: 15),
-                Consumer<SignupProvider>(
-                  builder: (context, provider, _) {
-                    return FormField<bool>(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (value) {
-                        if (!provider.termsAccepted) {
-                          return 'Please accept the terms and conditions';
-                        }
-                        return null;
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Already have an account?"),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()),
+                            (route) => false);
                       },
-                      builder: (FormFieldState<bool> state) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const TermsAndCo(),
-                            if (state.hasError)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8, left: 12),
-                                child: Text(
-                                  state.errorText!,
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.error,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-                const SizedBox(height: 15),
-                NextButton(
-                  onPressed: () {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Form is valid! Proceeding...')),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content:
-                                Text('Please fill in all fields correctly')),
-                      );
-                    }
-                  },
-                ),
-                const SizedBox(height: 15),
-                const LoginWith(),
-                const Login(),
-              ],
-            ),
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(
+                            color: Colors.blue, fontWeight: FontWeight.bold),
+                      ))
+                ],
+              )
+            ],
           ),
         ),
       ),

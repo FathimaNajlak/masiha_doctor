@@ -1,39 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:masiha_doctor/services/firebase_auth_services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginWith extends StatelessWidget {
   const LoginWith({super.key});
 
+  Future<void> _signInWithGoogle(BuildContext context) async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+    try {
+      final GoogleSignInAccount? googleSignInAccount =
+          await googleSignIn.signIn();
+
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
+
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          idToken: googleSignInAuthentication.idToken,
+          accessToken: googleSignInAuthentication.accessToken,
+        );
+
+        await firebaseAuth.signInWithCredential(credential);
+
+        Navigator.pushNamed(context, "/addDetails");
+      }
+    } catch (e) {
+      // Replace this with your method to show a toast or a snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Some error occurred: $e")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        children: [
-          const Text(
-            'or sign up with',
-            style: TextStyle(
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 16),
-          GestureDetector(
-            onTap: () async {
-              final firebaseAuthService = FirebaseAuthService();
-              final user = await firebaseAuthService.signInWithGoogle(context);
-              if (user != null) {
-                Navigator.pushReplacementNamed(context, '/allset');
-              }
-            },
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: const Color(0xFFF5F7FB),
-              child: Image.asset(
-                'assets/images/google.png',
-                height: 20,
-              ),
-            ),
-          ),
-        ],
+      child: ElevatedButton(
+        onPressed: () => _signInWithGoogle(context),
+        child: const Text('Sign in with Google'),
       ),
     );
   }

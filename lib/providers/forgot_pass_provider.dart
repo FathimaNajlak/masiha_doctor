@@ -27,7 +27,6 @@ class ForgotPasswordProvider extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
 
-      // Simulate API call
       await Future.delayed(const Duration(seconds: 2));
 
       _isLoading = false;
