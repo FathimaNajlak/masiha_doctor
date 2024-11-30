@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:masiha_doctor/consts/colors.dart';
-import 'package:masiha_doctor/providers/doc_details.dart';
+import 'package:masiha_doctor/providers/doc_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 

@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:masiha_doctor/firebase_options.dart';
-import 'package:masiha_doctor/providers/doc_details.dart';
+import 'package:masiha_doctor/providers/doc_details_provider.dart';
 import 'package:masiha_doctor/screens/add_details.dart';
 import 'package:masiha_doctor/screens/home/home.dart';
 import 'package:masiha_doctor/screens/login_signup/all_set.dart';
