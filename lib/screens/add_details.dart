@@ -1,6 +1,7 @@
 // user_provider.dart
 // user_details_page.dart
 import 'package:flutter/material.dart';
+import 'package:masiha_doctor/consts/colors.dart';
 import 'package:masiha_doctor/providers/doc_details.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -174,11 +175,11 @@ class UserDetailsPage extends StatelessWidget {
             : () async {
                 if (await userProvider.validateAndSave()) {
                   // Navigate to next page
-                  Navigator.pushNamed(context, '/next-page');
+                  Navigator.pushNamed(context, '/home');
                 }
               },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
+          backgroundColor: AppColors.darkcolor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
@@ -187,7 +188,10 @@ class UserDetailsPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: userProvider.isLoading
               ? const CircularProgressIndicator(color: Colors.white)
-              : const Text('Next'),
+              : const Text(
+                  'Next',
+                  style: TextStyle(color: Colors.white),
+                ),
         ),
       ),
     );
