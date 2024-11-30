@@ -29,6 +29,37 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
+  Future<void> _signUp() async {
+    setState(() {
+      isSigningUp = true;
+    });
+
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    try {
+      // Call the sign-up method from your FirebaseAuthService
+      await _auth.signUpWithEmailAndPassword(
+          email, password); // Make sure to implement this method
+
+      setState(() {
+        isSigningUp = false;
+      });
+
+      // Navigate to the home page after successful sign-up
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("User  is successfully created")),
+      );
+      Navigator.pushNamed(context, "/addDetails");
+    } catch (e) {
+      setState(() {
+        isSigningUp = false;
+      });
+
+      // Show error message
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,9 +108,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 height: 30,
               ),
               GestureDetector(
-                onTap: () {
-                  const ExistingAcc();
-                },
+                onTap: _signUp,
                 child: Container(
                   width: double.infinity,
                   height: 45,
