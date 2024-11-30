@@ -1,13 +1,11 @@
-// user_provider.dart
-// user_details_page.dart
 import 'package:flutter/material.dart';
 import 'package:masiha_doctor/consts/colors.dart';
 import 'package:masiha_doctor/providers/doc_details.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
-class UserDetailsPage extends StatelessWidget {
-  const UserDetailsPage({super.key});
+class DoctorDetailsPage extends StatelessWidget {
+  const DoctorDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,23 +17,24 @@ class UserDetailsPage extends StatelessWidget {
         ),
         title: const Text('Add Details'),
       ),
-      body: Consumer<UserProvider>(
-        builder: (context, userProvider, _) {
+      body: Consumer<DoctorDetailsProvider>(
+        builder: (context, DoctorDetailsProvider, _) {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Form(
-              key: userProvider.formKey,
+              key: DoctorDetailsProvider.formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildProfileImage(context, userProvider),
+                  _buildProfileImage(context, DoctorDetailsProvider),
                   const SizedBox(height: 24),
                   _buildTextField(
                     label: 'Full Name',
                     validator: (value) => value?.isEmpty ?? true
                         ? 'Please enter your name'
                         : null,
-                    onSaved: (value) => userProvider.user.fullName = value,
+                    onSaved: (value) =>
+                        DoctorDetailsProvider.user.fullName = value,
                   ),
                   const SizedBox(height: 16),
                   _buildTextField(
@@ -48,11 +47,11 @@ class UserDetailsPage extends StatelessWidget {
                       if (age == null || age < 0) return 'Invalid age';
                       return null;
                     },
-                    onSaved: (value) =>
-                        userProvider.user.age = int.tryParse(value ?? ''),
+                    onSaved: (value) => DoctorDetailsProvider.user.age =
+                        int.tryParse(value ?? ''),
                   ),
                   const SizedBox(height: 16),
-                  _buildDateField(context, userProvider),
+                  _buildDateField(context, DoctorDetailsProvider),
                   const SizedBox(height: 16),
                   _buildTextField(
                     label: 'Email',
@@ -66,12 +65,13 @@ class UserDetailsPage extends StatelessWidget {
                       }
                       return null;
                     },
-                    onSaved: (value) => userProvider.user.email = value,
+                    onSaved: (value) =>
+                        DoctorDetailsProvider.user.email = value,
                   ),
                   const SizedBox(height: 16),
-                  _buildGenderDropdown(userProvider),
+                  _buildGenderDropdown(DoctorDetailsProvider),
                   const SizedBox(height: 24),
-                  _buildNextButton(context, userProvider),
+                  _buildNextButton(context, DoctorDetailsProvider),
                 ],
               ),
             ),
@@ -81,9 +81,10 @@ class UserDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileImage(BuildContext context, UserProvider userProvider) {
+  Widget _buildProfileImage(
+      BuildContext context, DoctorDetailsProvider DoctorDetailsProvider) {
     return GestureDetector(
-      onTap: () => _showImageSourceDialog(context, userProvider),
+      onTap: () => _showImageSourceDialog(context, DoctorDetailsProvider),
       child: Container(
         width: 120,
         height: 120,
@@ -91,10 +92,10 @@ class UserDetailsPage extends StatelessWidget {
           shape: BoxShape.circle,
           color: Colors.grey[200],
         ),
-        child: userProvider.imageFile != null
+        child: DoctorDetailsProvider.imageFile != null
             ? ClipOval(
                 child: Image.file(
-                  userProvider.imageFile!,
+                  DoctorDetailsProvider.imageFile!,
                   fit: BoxFit.cover,
                 ),
               )
@@ -124,7 +125,8 @@ class UserDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDateField(BuildContext context, UserProvider userProvider) {
+  Widget _buildDateField(
+      BuildContext context, DoctorDetailsProvider DoctorDetailsProvider) {
     return TextFormField(
       decoration: const InputDecoration(
         labelText: 'Date of Birth',
@@ -140,15 +142,16 @@ class UserDetailsPage extends StatelessWidget {
           lastDate: DateTime.now(),
         );
         if (date != null) {
-          userProvider.user.dateOfBirth = date;
+          DoctorDetailsProvider.user.dateOfBirth = date;
         }
       },
-      validator: (value) =>
-          userProvider.user.dateOfBirth == null ? 'Please select a date' : null,
+      validator: (value) => DoctorDetailsProvider.user.dateOfBirth == null
+          ? 'Please select a date'
+          : null,
     );
   }
 
-  Widget _buildGenderDropdown(UserProvider userProvider) {
+  Widget _buildGenderDropdown(DoctorDetailsProvider DoctorDetailsProvider) {
     return DropdownButtonFormField<String>(
       decoration: const InputDecoration(
         labelText: 'Gender',
@@ -160,20 +163,21 @@ class UserDetailsPage extends StatelessWidget {
                 child: Text(gender),
               ))
           .toList(),
-      onChanged: (value) => userProvider.user.gender = value,
+      onChanged: (value) => DoctorDetailsProvider.user.gender = value,
       validator: (value) =>
           value?.isEmpty ?? true ? 'Please select a gender' : null,
     );
   }
 
-  Widget _buildNextButton(BuildContext context, UserProvider userProvider) {
+  Widget _buildNextButton(
+      BuildContext context, DoctorDetailsProvider DoctorDetailsProvider) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: userProvider.isLoading
+        onPressed: DoctorDetailsProvider.isLoading
             ? null
             : () async {
-                if (await userProvider.validateAndSave()) {
+                if (await DoctorDetailsProvider.validateAndSave()) {
                   // Navigate to next page
                   Navigator.pushNamed(context, '/home');
                 }
@@ -186,7 +190,7 @@ class UserDetailsPage extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
-          child: userProvider.isLoading
+          child: DoctorDetailsProvider.isLoading
               ? const CircularProgressIndicator(color: Colors.white)
               : const Text(
                   'Next',
@@ -197,7 +201,8 @@ class UserDetailsPage extends StatelessWidget {
     );
   }
 
-  void _showImageSourceDialog(BuildContext context, UserProvider userProvider) {
+  void _showImageSourceDialog(
+      BuildContext context, DoctorDetailsProvider DoctorDetailsProvider) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -210,7 +215,7 @@ class UserDetailsPage extends StatelessWidget {
               title: const Text('Camera'),
               onTap: () {
                 Navigator.pop(context);
-                userProvider.pickImage(ImageSource.camera);
+                DoctorDetailsProvider.pickImage(ImageSource.camera);
               },
             ),
             ListTile(
@@ -218,7 +223,7 @@ class UserDetailsPage extends StatelessWidget {
               title: const Text('Gallery'),
               onTap: () {
                 Navigator.pop(context);
-                userProvider.pickImage(ImageSource.gallery);
+                DoctorDetailsProvider.pickImage(ImageSource.gallery);
               },
             ),
           ],

@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:path/path.dart' as path;
 
-class UserProvider extends ChangeNotifier {
+class DoctorDetailsProvider extends ChangeNotifier {
   final User _user = User();
   File? _imageFile;
   final _formKey = GlobalKey<FormState>();

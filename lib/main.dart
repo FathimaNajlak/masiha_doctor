@@ -20,7 +20,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => DoctorDetailsProvider()),
       ],
       child: const MyApp(),
     ),
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignUpPage(),
         '/allset': (context) => const AllSetScreen(),
         '/forgotpass': (context) => const ForgotPasswordScreen(),
-        '/addDetails': (context) => const UserDetailsPage(),
+        '/addDetails': (context) => const DoctorDetailsPage(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,
