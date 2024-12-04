@@ -66,6 +66,25 @@ class FirebaseAuthService {
     }
   }
 
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      showToast(message: 'Password reset link sent to your email');
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          showToast(message: 'No user found with this email');
+          break;
+        case 'invalid-email':
+          showToast(message: 'Invalid email address');
+          break;
+        default:
+          showToast(message: 'Error: ${e.message}');
+      }
+      rethrow; // Rethrow to handle in the provider
+    }
+  }
+
   Future<void> signOut() async {
     try {
       await _googleSignIn.signOut();

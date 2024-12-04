@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:masiha_doctor/screens/add_details.dart';
 import 'package:masiha_doctor/widgets/splash/loading_animation.dart';
 import 'package:masiha_doctor/widgets/splash/logo.dart';
 
@@ -23,12 +24,12 @@ class _AllSetScreenState extends State<AllSetScreen>
     // Navigate to next screen after 3 seconds
     Future.delayed(const Duration(seconds: 5), () {
       if (mounted) {
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(
-        //       // builder: (context) => const DoctorProfilePage(),
-        //       ),
-        // );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const DoctorDetailsPage(),
+          ),
+        );
       }
     });
   }
