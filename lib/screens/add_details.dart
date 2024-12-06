@@ -81,19 +81,19 @@ class DoctorDetailsPage extends StatelessWidget {
                     validator: doctorDetailsProvider.validateYearOfExperience,
                   ),
                   const SizedBox(height: 16),
-                  AvailableDaysWidget(provider: doctorDetailsProvider),
+                  // AvailableDaysWidget(provider: doctorDetailsProvider),
                   const SizedBox(height: 16),
-                  WorkingTimeWidget(provider: doctorDetailsProvider),
+                  // WorkingTimeWidget(provider: doctorDetailsProvider),
                   const SizedBox(height: 16),
                   _buildEducationSection(context, doctorDetailsProvider),
                   const SizedBox(height: 16),
-                  TextInputWidget(
-                    label: 'Consultation Fees',
-                    keyboardType: TextInputType.number,
-                    onSaved: (value) => doctorDetailsProvider
-                        .doctor.consultationFees = double.tryParse(value ?? ''),
-                    validator: doctorDetailsProvider.validateConsultationFees,
-                  ),
+                  // TextInputWidget(
+                  //   label: 'Consultation Fees',
+                  //   keyboardType: TextInputType.number,
+                  //   onSaved: (value) => doctorDetailsProvider
+                  //       .doctor.consultationFees = double.tryParse(value ?? ''),
+                  //   validator: doctorDetailsProvider.validateConsultationFees,
+                  // ),
                   const SizedBox(height: 24),
                   NextButtonWidget(provider: doctorDetailsProvider),
                 ],
@@ -308,11 +308,14 @@ class DoctorDetailsPage extends StatelessWidget {
                         await provider.saveImageLocally(certificateFile!);
                   }
 
-                  provider.addEducation(Education(
+                  provider.addEducation(
+                    Education(
                       degree: degree,
                       institution: institution,
                       yearOfCompletion: yearOfCompletion,
-                      certificatePath: certificatePath));
+                      certificatePath: certificatePath,
+                    ),
+                  );
                   Navigator.pop(context);
                 }
               },

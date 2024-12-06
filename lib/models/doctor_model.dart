@@ -21,6 +21,25 @@ class Education {
   }
 }
 
+enum RequestStatus {
+  pending,
+  approved,
+  rejected,
+}
+
+extension RequestStatusExtension on RequestStatus {
+  String get displayName {
+    switch (this) {
+      case RequestStatus.pending:
+        return 'Pending Review';
+      case RequestStatus.approved:
+        return 'Approved';
+      case RequestStatus.rejected:
+        return 'Rejected';
+    }
+  }
+}
+
 class DoctorDetailsModel {
   String? fullName;
   int? age;
@@ -29,12 +48,14 @@ class DoctorDetailsModel {
   String? gender;
   String? hospitalName;
   int? yearOfExperience;
-  List<String>? availableDays;
-  DateTime? workingTimeStart; // Start time
-  DateTime? workingTimeEnd; // End time
-  double? consultationFees;
+  // List<String>? availableDays;
+  // DateTime? workingTimeStart; // Start time
+  // DateTime? workingTimeEnd; // End time
+  // double? consultationFees;
   String? imagePath;
   List<Education>? educations;
+  String? requestId;
+  RequestStatus requestStatus = RequestStatus.pending;
 
   DoctorDetailsModel({
     this.fullName,
@@ -44,10 +65,10 @@ class DoctorDetailsModel {
     this.gender,
     this.hospitalName,
     this.yearOfExperience,
-    this.availableDays,
-    this.workingTimeStart,
-    this.workingTimeEnd,
-    this.consultationFees,
+    // this.availableDays,
+    // this.workingTimeStart,
+    // this.workingTimeEnd,
+    // this.consultationFees,
     this.imagePath,
     this.educations,
   });
@@ -62,12 +83,55 @@ class DoctorDetailsModel {
       'gender': gender,
       'hospitalName': hospitalName,
       'yearOfExperience': yearOfExperience,
-      'availableDays': availableDays,
-      'workingTimeStart': workingTimeStart?.toIso8601String(),
-      'workingTimeEnd': workingTimeEnd?.toIso8601String(),
-      'consultationFees': consultationFees,
+      // 'availableDays': availableDays,
+      // 'workingTimeStart': workingTimeStart?.toIso8601String(),
+      // 'workingTimeEnd': workingTimeEnd?.toIso8601String(),
+      // 'consultationFees': consultationFees,
       'imagePath': imagePath,
       'educations': educations?.map((e) => e.toJson()).toList(),
+      'requestId': requestId,
+      'requestStatus': requestStatus
+          .toString()
+          .split('.')
+          .last, // Optional: Serialize enum as a string
     };
+  }
+
+  factory DoctorDetailsModel.fromJson(Map<String, dynamic> json) {
+    return DoctorDetailsModel(
+      fullName: json['fullName'],
+      age: json['age'],
+      dateOfBirth: json['dateOfBirth'] != null
+          ? DateTime.parse(json['dateOfBirth'])
+          : null,
+      email: json['email'],
+      gender: json['gender'],
+      hospitalName: json['hospitalName'],
+      yearOfExperience: json['yearOfExperience'],
+      // availableDays: json['availableDays'] != null
+      //     ? List<String>.from(json['availableDays'])
+      //     : null,
+      // workingTimeStart: json['workingTimeStart'] != null
+      //     ? DateTime.parse(json['workingTimeStart'])
+      //     : null,
+      // workingTimeEnd: json['workingTimeEnd'] != null
+      //     ? DateTime.parse(json['workingTimeEnd'])
+      //     : null,
+      // consultationFees: json['consultationFees'],
+      imagePath: json['imagePath'],
+      educations: json['educations'] != null
+          ? (json['educations'] as List)
+              .map((e) => Education(
+                    degree: e['degree'],
+                    institution: e['institution'],
+                    yearOfCompletion: e['yearOfCompletion'],
+                    certificatePath: e['certificatePath'],
+                  ))
+              .toList()
+          : null,
+    )..requestStatus = RequestStatus.values.firstWhere(
+        (status) => status.toString().split('.').last == json['requestStatus'],
+        orElse: () => RequestStatus.pending,
+      );
   }
 }
