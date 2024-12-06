@@ -10,6 +10,7 @@ import 'package:masiha_doctor/screens/login_signup/let_in.dart';
 import 'package:masiha_doctor/screens/login_signup/login_screen.dart';
 import 'package:masiha_doctor/screens/login_signup/signup_screen.dart';
 import 'package:masiha_doctor/screens/splash_screen.dart';
+import 'package:masiha_doctor/services/supabase_service.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -17,6 +18,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await SupabaseService.initialize();
   runApp(
     MultiProvider(
       providers: [

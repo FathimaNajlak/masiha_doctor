@@ -2,13 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'package:masiha_doctor/consts/colors.dart';
 import 'package:masiha_doctor/models/doctor_model.dart';
-import 'package:masiha_doctor/providers/doc_details_provider.dart';
+import 'package:masiha_doctor/widgets/add_details/available_days.dart';
+import 'package:masiha_doctor/widgets/add_details/date_input.dart';
+import 'package:masiha_doctor/widgets/add_details/gender_dropdown.dart';
+import 'package:masiha_doctor/widgets/add_details/profile_image.dart';
+import 'package:masiha_doctor/widgets/add_details/save_button.dart';
+import 'package:masiha_doctor/widgets/add_details/text_input.dart';
+import 'package:masiha_doctor/widgets/add_details/working_time.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
+
+import '../providers/doc_details_provider.dart';
 
 class DoctorDetailsPage extends StatelessWidget {
   const DoctorDetailsPage({super.key});
@@ -32,212 +37,71 @@ class DoctorDetailsPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildProfileImage(context, doctorDetailsProvider),
+                  ProfileImageWidget(provider: doctorDetailsProvider),
                   const SizedBox(height: 24),
-                  _buildTextField(
+                  TextInputWidget(
                     label: 'Full Name',
                     onSaved: (value) =>
                         doctorDetailsProvider.doctor.fullName = value,
+                    validator: doctorDetailsProvider.validateName,
                   ),
                   const SizedBox(height: 16),
-                  _buildTextField(
+                  TextInputWidget(
                     label: 'Age',
                     keyboardType: TextInputType.number,
                     onSaved: (value) => doctorDetailsProvider.doctor.age =
                         int.tryParse(value ?? ''),
+                    validator: doctorDetailsProvider.validateAge,
                   ),
                   const SizedBox(height: 16),
-                  _buildDateField(context, doctorDetailsProvider),
+                  DateInputWidget(provider: doctorDetailsProvider),
                   const SizedBox(height: 16),
-                  _buildTextField(
+                  TextInputWidget(
                     label: 'Email',
                     keyboardType: TextInputType.emailAddress,
                     onSaved: (value) =>
                         doctorDetailsProvider.doctor.email = value,
+                    validator: doctorDetailsProvider.validateEmail,
                   ),
                   const SizedBox(height: 16),
-                  _buildGenderDropdown(doctorDetailsProvider),
+                  GenderDropdownWidget(provider: doctorDetailsProvider),
                   const SizedBox(height: 16),
-                  _buildTextField(
+                  TextInputWidget(
                     label: 'Hospital Name',
                     onSaved: (value) =>
                         doctorDetailsProvider.doctor.hospitalName = value,
+                    validator: doctorDetailsProvider.validateHospitalName,
                   ),
                   const SizedBox(height: 16),
-                  _buildTextField(
+                  TextInputWidget(
                     label: 'Year of Experience',
                     keyboardType: TextInputType.number,
                     onSaved: (value) => doctorDetailsProvider
                         .doctor.yearOfExperience = int.tryParse(value ?? ''),
+                    validator: doctorDetailsProvider.validateYearOfExperience,
                   ),
                   const SizedBox(height: 16),
-                  _buildAvailableDaysCheckboxes(doctorDetailsProvider, context),
+                  // AvailableDaysWidget(provider: doctorDetailsProvider),
                   const SizedBox(height: 16),
-                  _buildWorkingTimeField(context, doctorDetailsProvider),
+                  // WorkingTimeWidget(provider: doctorDetailsProvider),
                   const SizedBox(height: 16),
                   _buildEducationSection(context, doctorDetailsProvider),
                   const SizedBox(height: 16),
-                  _buildTextField(
-                    label: 'Consultation Fees',
-                    keyboardType: TextInputType.number,
-                    onSaved: (value) => doctorDetailsProvider
-                        .doctor.consultationFees = double.tryParse(value ?? ''),
-                  ),
+                  // TextInputWidget(
+                  //   label: 'Consultation Fees',
+                  //   keyboardType: TextInputType.number,
+                  //   onSaved: (value) => doctorDetailsProvider
+                  //       .doctor.consultationFees = double.tryParse(value ?? ''),
+                  //   validator: doctorDetailsProvider.validateConsultationFees,
+                  // ),
                   const SizedBox(height: 24),
-                  _buildNextButton(context, doctorDetailsProvider),
+                  NextButtonWidget(provider: doctorDetailsProvider),
                 ],
               ),
             ),
           );
         },
       ),
-    );
-  }
-
-  Widget _buildProfileImage(
-      BuildContext context, DoctorDetailsProvider DoctorDetailsProvider) {
-    return GestureDetector(
-      onTap: () => _showImageSourceDialog(context, DoctorDetailsProvider),
-      child: Container(
-        width: 120,
-        height: 120,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey[200],
-        ),
-        child: DoctorDetailsProvider.imageFile != null
-            ? ClipOval(
-                child: Image.file(
-                  DoctorDetailsProvider.imageFile!,
-                  fit: BoxFit.cover,
-                ),
-              )
-            : Icon(
-                Icons.person,
-                size: 60,
-                color: Colors.grey[400],
-              ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required String label,
-    TextInputType? keyboardType,
-    void Function(String?)? onSaved,
-  }) {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-      ),
-      keyboardType: keyboardType,
-      onSaved: onSaved,
-    );
-  }
-
-  Widget _buildDateField(
-      BuildContext context, DoctorDetailsProvider DoctorDetailsProvider) {
-    return TextFormField(
-      decoration: const InputDecoration(
-        labelText: 'Date of Birth',
-        border: OutlineInputBorder(),
-        suffixIcon: Icon(Icons.calendar_today),
-      ),
-      readOnly: true,
-      onTap: () async {
-        final date = await showDatePicker(
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime(1900),
-          lastDate: DateTime.now(),
-        );
-        if (date != null) {
-          DoctorDetailsProvider.doctor.dateOfBirth = date;
-        }
-      },
-      validator: (value) => DoctorDetailsProvider.doctor.dateOfBirth == null
-          ? 'Please select a date'
-          : null,
-    );
-  }
-
-  Widget _buildGenderDropdown(DoctorDetailsProvider DoctorDetailsProvider) {
-    return DropdownButtonFormField<String>(
-      decoration: const InputDecoration(
-        labelText: 'Gender',
-        border: OutlineInputBorder(),
-      ),
-      items: ['Male', 'Female', 'Other']
-          .map((gender) => DropdownMenuItem(
-                value: gender,
-                child: Text(gender),
-              ))
-          .toList(),
-      onChanged: (value) => DoctorDetailsProvider.doctor.gender = value,
-      validator: (value) =>
-          value?.isEmpty ?? true ? 'Please select a gender' : null,
-    );
-  }
-
-  Widget _buildAvailableDaysCheckboxes(
-      DoctorDetailsProvider DoctorDetailsProvider, BuildContext context) {
-    final availableDays = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Available Days',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Wrap(
-          spacing: 8,
-          runSpacing: 4,
-          children: availableDays.map((day) {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Checkbox(
-                  value: DoctorDetailsProvider.doctor.availableDays
-                          ?.contains(day) ??
-                      false,
-                  onChanged: (value) {
-                    if (value ?? false) {
-                      DoctorDetailsProvider.doctor.availableDays ??= [];
-                      DoctorDetailsProvider.doctor.availableDays!.add(day);
-                    } else {
-                      DoctorDetailsProvider.doctor.availableDays?.remove(day);
-                    }
-                    DoctorDetailsProvider.notifyListeners();
-                  },
-                ),
-                Text(day),
-              ],
-            );
-          }).toList(),
-        ),
-        if (DoctorDetailsProvider.doctor.availableDays?.isEmpty ?? true)
-          Text(
-            'Please select at least one available day',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.error,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-      ],
     );
   }
 
@@ -496,169 +360,6 @@ class DoctorDetailsPage extends StatelessWidget {
                 if (pickedFile != null) {
                   onFileSelected(File(pickedFile.path));
                 }
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWorkingTimeField(
-      BuildContext context, DoctorDetailsProvider doctorDetailsProvider) {
-    final startTime =
-        doctorDetailsProvider.doctor.workingTimeStart ?? DateTime.now();
-    final endTime = doctorDetailsProvider.doctor.workingTimeEnd ??
-        DateTime.now().add(const Duration(hours: 8));
-
-    // Format time to 12-hour format
-    String formatTime(DateTime time) {
-      return DateFormat.jm().format(time); // Example: "9:00 AM" or "5:00 PM"
-    }
-
-    // Initialize text controllers
-    TextEditingController startTimeController =
-        TextEditingController(text: formatTime(startTime));
-    TextEditingController endTimeController =
-        TextEditingController(text: formatTime(endTime));
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Working Time',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: startTimeController,
-                readOnly: true,
-                decoration: InputDecoration(
-                  labelText: 'Start Time',
-                  hintText: 'Select start time',
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.access_time),
-                    onPressed: () async {
-                      final newStartTime = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.fromDateTime(startTime),
-                      );
-                      if (newStartTime != null) {
-                        final newStartDateTime = DateTime(
-                          startTime.year,
-                          startTime.month,
-                          startTime.day,
-                          newStartTime.hour,
-                          newStartTime.minute,
-                        );
-                        doctorDetailsProvider.doctor.workingTimeStart =
-                            newStartDateTime;
-                        startTimeController.text = formatTime(newStartDateTime);
-                        doctorDetailsProvider.notifyListeners();
-                      }
-                    },
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                controller: endTimeController,
-                readOnly: true,
-                decoration: InputDecoration(
-                  labelText: 'End Time',
-                  hintText: 'Select end time',
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.access_time),
-                    onPressed: () async {
-                      final newEndTime = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.fromDateTime(endTime),
-                      );
-                      if (newEndTime != null) {
-                        final newEndDateTime = DateTime(
-                          endTime.year,
-                          endTime.month,
-                          endTime.day,
-                          newEndTime.hour,
-                          newEndTime.minute,
-                        );
-                        doctorDetailsProvider.doctor.workingTimeEnd =
-                            newEndDateTime;
-                        endTimeController.text = formatTime(newEndDateTime);
-                        doctorDetailsProvider.notifyListeners();
-                      }
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNextButton(
-      BuildContext context, DoctorDetailsProvider DoctorDetailsProvider) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        style: const ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(AppColors.darkcolor)),
-        onPressed: DoctorDetailsProvider.isLoading
-            ? null
-            : () async {
-                if (await DoctorDetailsProvider.validateAndSave()) {
-                  // Navigate to next page
-                  Navigator.pushNamed(context, '/home');
-                }
-              },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: DoctorDetailsProvider.isLoading
-              ? const CircularProgressIndicator()
-              : const Text(
-                  'Save',
-                  style: TextStyle(color: Colors.white),
-                ),
-        ),
-      ),
-    );
-  }
-
-  void _showImageSourceDialog(
-      BuildContext context, DoctorDetailsProvider DoctorDetailsProvider) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Select Image Source'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.camera),
-              title: const Text('Camera'),
-              onTap: () {
-                Navigator.pop(context);
-                DoctorDetailsProvider.pickImage(ImageSource.camera);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('Gallery'),
-              onTap: () {
-                Navigator.pop(context);
-                DoctorDetailsProvider.pickImage(ImageSource.gallery);
               },
             ),
           ],

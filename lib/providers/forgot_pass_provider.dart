@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:masiha_doctor/screens/login_signup/set_pass_screen.dart';
+import 'package:masiha_doctor/services/firebase_auth_services.dart';
 
 class ForgotPasswordProvider extends ChangeNotifier {
+  final FirebaseAuthService _authService = FirebaseAuthService();
   String _email = '';
   bool _isLoading = false;
   String? _errorMessage;
@@ -12,7 +13,12 @@ class ForgotPasswordProvider extends ChangeNotifier {
 
   void setEmail(String value) {
     _email = value;
+    _errorMessage = null;
     notifyListeners();
+  }
+
+  bool isValidEmail(String email) {
+    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
   }
 
   Future<void> resetPassword(BuildContext context) async {
@@ -22,24 +28,48 @@ class ForgotPasswordProvider extends ChangeNotifier {
       return;
     }
 
+    if (!isValidEmail(_email)) {
+      _errorMessage = 'Please enter a valid email';
+      notifyListeners();
+      return;
+    }
+
     try {
       _isLoading = true;
       _errorMessage = null;
       notifyListeners();
 
-      await Future.delayed(const Duration(seconds: 2));
+      await _authService.sendPasswordResetEmail(_email);
 
       _isLoading = false;
       notifyListeners();
 
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SetPasswordScreen(),
-          ));
+      // Show success dialog
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            title: const Text('Reset Link Sent'),
+            content: const Text(
+              'A password reset link has been sent to your email. Please check your inbox and follow the instructions.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                  Navigator.pushReplacementNamed(
+                      context, '/login'); // Go to login
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     } catch (e) {
       _isLoading = false;
-      _errorMessage = 'An error occurred. Please try again.';
+      _errorMessage = 'Failed to send reset link. Please try again.';
       notifyListeners();
     }
   }
