@@ -1,5 +1,8 @@
+// lib/widgets/add_details/gender_dropdown.dart
+
 import 'package:flutter/material.dart';
-import 'package:masiha_doctor/providers/doc_details_provider.dart';
+import 'package:provider/provider.dart';
+import '../../providers/doc_details_provider.dart';
 
 class GenderDropdownWidget extends StatelessWidget {
   final DoctorDetailsProvider provider;
@@ -13,15 +16,16 @@ class GenderDropdownWidget extends StatelessWidget {
         labelText: 'Gender',
         border: OutlineInputBorder(),
       ),
+      value: provider.doctor.gender,
       items: ['Male', 'Female', 'Other']
           .map((gender) => DropdownMenuItem(
                 value: gender,
                 child: Text(gender),
               ))
           .toList(),
-      onChanged: (value) => provider.doctor.gender = value,
-      validator: (value) =>
-          value?.isEmpty ?? true ? 'Please select a gender' : null,
+      onChanged: (value) {
+        provider.doctor.gender = value;
+      },
     );
   }
 }

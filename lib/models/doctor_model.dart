@@ -51,7 +51,7 @@ class DoctorDetailsModel {
   // List<String>? availableDays;
   // DateTime? workingTimeStart; // Start time
   // DateTime? workingTimeEnd; // End time
-  // double? consultationFees;
+  String? specialty;
   String? imagePath;
   List<Education>? educations;
   String? requestId;
@@ -68,7 +68,7 @@ class DoctorDetailsModel {
     // this.availableDays,
     // this.workingTimeStart,
     // this.workingTimeEnd,
-    // this.consultationFees,
+    this.specialty,
     this.imagePath,
     this.educations,
   });
@@ -86,7 +86,7 @@ class DoctorDetailsModel {
       // 'availableDays': availableDays,
       // 'workingTimeStart': workingTimeStart?.toIso8601String(),
       // 'workingTimeEnd': workingTimeEnd?.toIso8601String(),
-      // 'consultationFees': consultationFees,
+      'specialty': specialty,
       'imagePath': imagePath,
       'educations': educations?.map((e) => e.toJson()).toList(),
       'requestId': requestId,
@@ -117,7 +117,7 @@ class DoctorDetailsModel {
       // workingTimeEnd: json['workingTimeEnd'] != null
       //     ? DateTime.parse(json['workingTimeEnd'])
       //     : null,
-      // consultationFees: json['consultationFees'],
+      specialty: json['specialty'],
       imagePath: json['imagePath'],
       educations: json['educations'] != null
           ? (json['educations'] as List)
