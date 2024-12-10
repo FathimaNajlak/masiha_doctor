@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:masiha_doctor/services/supabase_authentication_service.dart';
 import 'package:masiha_doctor/services/supabase_service.dart';
 import 'package:path/path.dart' as path;
@@ -87,19 +88,15 @@ class DoctorDetailsProvider extends ChangeNotifier {
     return null;
   }
 
-  // String? validateConsultationFees(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Consultation fees is required';
-  //   }
-  //   final fees = double.tryParse(value);
-  //   if (fees == null) {
-  //     return 'Please enter a valid amount';
-  //   }
-  //   if (fees < 0) {
-  //     return 'Fees cannot be negative';
-  //   }
-  //   return null;
-  // }
+  String? validateSpeciality(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Speciality is required';
+    }
+    if (value.length < 3) {
+      return 'speciality must be at least 3 characters';
+    }
+    return null;
+  }
 
   String? validateDateOfBirth(DateTime? date) {
     if (date == null) {
@@ -403,15 +400,18 @@ class DoctorDetailsProvider extends ChangeNotifier {
   }
 
   Future<void> saveDoctorRequest() async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) throw Exception('User not authenticated');
+
     final docRef =
         await FirebaseFirestore.instance.collection('doctorRequests').add({
       ...(_doctor.toJson()),
+      'userId': userId, // Add this line
       'requestStatus': RequestStatus.pending.name,
       'submittedAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
     });
 
-    // Store the request ID in the doctor model
     _doctor.requestId = docRef.id;
     _doctor.requestStatus = RequestStatus.pending;
   }
