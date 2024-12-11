@@ -48,9 +48,7 @@ class DoctorDetailsModel {
   String? gender;
   String? hospitalName;
   int? yearOfExperience;
-  // List<String>? availableDays;
-  // DateTime? workingTimeStart; // Start time
-  // DateTime? workingTimeEnd; // End time
+
   String? specialty;
   String? imagePath;
   List<Education>? educations;
@@ -65,9 +63,6 @@ class DoctorDetailsModel {
     this.gender,
     this.hospitalName,
     this.yearOfExperience,
-    // this.availableDays,
-    // this.workingTimeStart,
-    // this.workingTimeEnd,
     this.specialty,
     this.imagePath,
     this.educations,
@@ -83,9 +78,7 @@ class DoctorDetailsModel {
       'gender': gender,
       'hospitalName': hospitalName,
       'yearOfExperience': yearOfExperience,
-      // 'availableDays': availableDays,
-      // 'workingTimeStart': workingTimeStart?.toIso8601String(),
-      // 'workingTimeEnd': workingTimeEnd?.toIso8601String(),
+
       'specialty': specialty,
       'imagePath': imagePath,
       'educations': educations?.map((e) => e.toJson()).toList(),
@@ -108,15 +101,6 @@ class DoctorDetailsModel {
       gender: json['gender'],
       hospitalName: json['hospitalName'],
       yearOfExperience: json['yearOfExperience'],
-      // availableDays: json['availableDays'] != null
-      //     ? List<String>.from(json['availableDays'])
-      //     : null,
-      // workingTimeStart: json['workingTimeStart'] != null
-      //     ? DateTime.parse(json['workingTimeStart'])
-      //     : null,
-      // workingTimeEnd: json['workingTimeEnd'] != null
-      //     ? DateTime.parse(json['workingTimeEnd'])
-      //     : null,
       specialty: json['specialty'],
       imagePath: json['imagePath'],
       educations: json['educations'] != null

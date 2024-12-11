@@ -1,17 +1,18 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:masiha_doctor/services/supabase_authentication_service.dart';
-import 'package:masiha_doctor/services/supabase_service.dart';
+import 'package:masiha_doctor/services/cloudinary_service.dart';
+
 import 'package:path/path.dart' as path;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:masiha_doctor/models/doctor_model.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DoctorDetailsProvider extends ChangeNotifier {
   final DoctorDetailsModel _doctor = DoctorDetailsModel();
+  final CloudinaryService _cloudinaryService = CloudinaryService();
+
   File? _imageFile;
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
@@ -169,102 +170,28 @@ class DoctorDetailsProvider extends ChangeNotifier {
     }
   }
 
-  Future<String> saveImageLocally(File imageFile) async {
+  // Future<String> saveImageLocally(File imageFile) async {
+  //   try {
+  //     final directory = await getApplicationDocumentsDirectory();
+  //     final fileName =
+  //         'profile_${DateTime.now().millisecondsSinceEpoch}${path.extension(imageFile.path)}';
+  //     final savedImage = await imageFile.copy('${directory.path}/$fileName');
+  //     return savedImage.path;
+  //   } catch (e) {
+  //     throw Exception('Failed to save image locally');
+  //   }
+  // }
+  Future<String> updateDoctorImage(File imageFile) async {
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      final fileName =
-          'profile_${DateTime.now().millisecondsSinceEpoch}${path.extension(imageFile.path)}';
-      final savedImage = await imageFile.copy('${directory.path}/$fileName');
-      return savedImage.path;
+      final cloudinaryUrl =
+          await _cloudinaryService.uploadProfileImage(imageFile);
+      notifyListeners();
+      return cloudinaryUrl;
     } catch (e) {
-      throw Exception('Failed to save image locally');
+      print('Error uploading image: $e');
+      rethrow;
     }
   }
-  // Future<String?> uploadImageToSupabase(File imageFile) async {
-  //   try {
-  //     final supabaseAuth = SupabaseAuthService();
-  //     final supabaseClient =
-  //         Supabase.instance.client; // Get the Supabase client instance
-
-  //     // Ensure Supabase session is valid before upload
-  //     final isAuthenticated = await supabaseAuth.ensureSupabaseAuthenticated();
-  //     if (!isAuthenticated) {
-  //       throw Exception('Authentication required. Please log in again.');
-  //     }
-
-  //     // Validate file before upload
-  //     // final fileSize = await imageFile.length();
-  //     // if (fileSize > 5 * 1024 * 1024) {
-  //     //   throw Exception('File size must be less than 5MB');
-  //     // }
-
-  //     // Generate a unique filename
-  //     final userId =
-  //         supabaseClient.auth.currentUser?.id; // Use supabaseClient instead
-  //     if (userId == null) {
-  //       throw Exception('User ID not found');
-  //     }
-
-  //     final timestamp = DateTime.now().millisecondsSinceEpoch;
-  //     final extension = path.extension(imageFile.path);
-  //     final fileName = 'doctor_profile/${userId}_$timestamp$extension';
-
-  //     // Upload with retry logic
-  //     String? imageUrl;
-  //     int retryCount = 0;
-  //     const maxRetries = 3;
-
-  //     while (retryCount < maxRetries && imageUrl == null) {
-  //       try {
-  //         await supabaseClient.storage.from('doctor_profile').upload(
-  //               // Use supabaseClient instead
-  //               fileName,
-  //               imageFile,
-  //               fileOptions: const FileOptions(
-  //                 upsert: true,
-  //                 contentType: 'image',
-  //               ),
-  //             );
-
-  //         imageUrl = supabaseClient.storage // Use supabaseClient instead
-  //             .from('doctor_profile')
-  //             .getPublicUrl(fileName);
-
-  //         break;
-  //       } catch (e) {
-  //         retryCount++;
-  //         if (retryCount == maxRetries) {
-  //           throw Exception('Upload failed after $maxRetries attempts: $e');
-  //         }
-  //         await Future.delayed(Duration(seconds: retryCount));
-  //       }
-  //     }
-
-  //     return imageUrl;
-  //   } catch (e) {
-  //     print('Upload error details: $e');
-  //     rethrow;
-  //   }
-  // }
-
-  // // Add this method to handle the upload process with proper error handling
-  // Future<void> handleImageUpload(File imageFile) async {
-  //   setLoadingState(true);
-  //   try {
-  //     final imageUrl = await uploadImageToSupabase(imageFile);
-  //     if (imageUrl != null) {
-  //       _doctor.imagePath = imageUrl;
-  //       _imageError = null;
-  //     } else {
-  //       _imageError = 'Failed to upload image';
-  //     }
-  //   } catch (e) {
-  //     _imageError = e.toString();
-  //   } finally {
-  //     setLoadingState(false);
-  //     notifyListeners();
-  //   }
-  // }
 
   // Education Methods
   Future<void> addEducation(Education education) async {
@@ -364,7 +291,8 @@ class DoctorDetailsProvider extends ChangeNotifier {
     try {
       // Upload profile image to Supabase
       if (_imageFile != null) {
-        final imageUrl = await saveImageLocally(_imageFile!);
+        final imageUrl = await updateDoctorImage(_imageFile!);
+        // final imageUrl = await saveImageLocally(_imageFile!);
         _doctor.imagePath = imageUrl; // Store the public URL
       }
 
@@ -387,7 +315,8 @@ class DoctorDetailsProvider extends ChangeNotifier {
       if (education.certificatePath != null) {
         final certificateFile = File(education.certificatePath!);
         if (await certificateFile.exists()) {
-          final savedCertificatePath = await saveImageLocally(certificateFile);
+          final savedCertificatePath = await updateDoctorImage(certificateFile);
+          // final savedCertificatePath = await saveImageLocally(certificateFile);
           education.certificatePath = savedCertificatePath;
         }
       }

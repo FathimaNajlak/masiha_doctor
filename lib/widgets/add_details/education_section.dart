@@ -206,7 +206,8 @@ class EducationSection extends StatelessWidget {
                   // Save certificate if uploaded
                   if (certificateFile != null) {
                     certificatePath =
-                        await provider.saveImageLocally(certificateFile!);
+                        await provider.updateDoctorImage(certificateFile!);
+                    // await provider.saveImageLocally(certificateFile!);
                   }
 
                   provider.addEducation(
