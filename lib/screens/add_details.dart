@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:masiha_doctor/widgets/add_details/education_section.dart';
 import 'package:masiha_doctor/widgets/add_details/save_button.dart';
+import 'package:masiha_doctor/widgets/add_details/speciality_dropdown.dart';
 import 'package:provider/provider.dart';
 import '../providers/doc_details_provider.dart';
 import '../widgets/add_details/profile_image.dart';
@@ -74,12 +75,14 @@ class DoctorDetailsPage extends StatelessWidget {
                     validator: doctorDetailsProvider.validateYearOfExperience,
                   ),
                   const SizedBox(height: 16),
-                  TextInputWidget(
-                    label: 'Specialty',
-                    onSaved: (value) =>
-                        doctorDetailsProvider.doctor.specialty = value,
-                    validator: doctorDetailsProvider.validateSpeciality,
-                  ),
+                  // TextInputWidget(
+                  //   label: 'Specialty',
+                  //   onSaved: (value) =>
+                  //       doctorDetailsProvider.doctor.specialty = value,
+                  //   validator: doctorDetailsProvider.validateSpeciality,
+                  // ),
+                  SpecialtyDropdown(
+                      doctorDetailsProvider: doctorDetailsProvider),
                   const SizedBox(height: 16),
                   EducationSection(provider: doctorDetailsProvider),
                   const SizedBox(height: 24),

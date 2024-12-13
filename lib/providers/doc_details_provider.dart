@@ -10,6 +10,29 @@ import 'package:masiha_doctor/models/doctor_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DoctorDetailsProvider extends ChangeNotifier {
+  final List<String> specialties = [
+    'General Practice',
+    'Internal Medicine',
+    'Pediatrics',
+    'Obstetrics and Gynecology',
+    'Surgery',
+    'Psychiatry',
+    'Dermatology',
+    'Cardiology',
+    'Neurology',
+    'Orthopedics',
+    'Ophthalmology',
+    'ENT (Otolaryngology)',
+    'Urology',
+    'Oncology',
+    'Endocrinology',
+    'Gastroenterology',
+    'Pulmonology',
+    'Nephrology',
+    'Rheumatology',
+    'Emergency Medicine',
+    'General Dentistry',
+  ];
   final DoctorDetailsModel _doctor = DoctorDetailsModel();
   final CloudinaryService _cloudinaryService = CloudinaryService();
 
@@ -26,6 +49,12 @@ class DoctorDetailsProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get imageError => _imageError;
   List<File> get certificateFiles => _certificateFiles;
+  String? get selectedSpecialty => _doctor.specialty;
+
+  set selectedSpecialty(String? value) {
+    _doctor.specialty = value;
+    notifyListeners();
+  }
 
   // Validation Methods
   String? validateName(String? value) {
@@ -89,12 +118,21 @@ class DoctorDetailsProvider extends ChangeNotifier {
     return null;
   }
 
+  // String? validateSpeciality(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Speciality is required';
+  //   }
+  //   if (value.length < 3) {
+  //     return 'speciality must be at least 3 characters';
+  //   }
+  //   return null;
+  // }
   String? validateSpeciality(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Speciality is required';
+      return 'Specialty is required';
     }
-    if (value.length < 3) {
-      return 'speciality must be at least 3 characters';
+    if (!specialties.contains(value)) {
+      return 'Please select a valid specialty';
     }
     return null;
   }
@@ -268,16 +306,6 @@ class DoctorDetailsProvider extends ChangeNotifier {
       notifyListeners();
       return false;
     }
-
-    // if (!validateAvailableDays()) {
-    //   // Handle available days error
-    //   return false;
-    // }
-
-    // if (!validateWorkingHours()) {
-    //   // Handle working hours error
-    //   return false;
-    // }
 
     if (!validateEducation()) {
       // Handle education error
