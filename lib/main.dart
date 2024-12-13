@@ -4,6 +4,7 @@ import 'package:masiha_doctor/firebase_options.dart';
 import 'package:masiha_doctor/providers/doc_details_provider.dart';
 import 'package:masiha_doctor/screens/add_details.dart';
 import 'package:masiha_doctor/screens/doctor/availability.dart';
+import 'package:masiha_doctor/screens/doctor/consultation_fee.dart';
 import 'package:masiha_doctor/screens/doctor/details.dart';
 import 'package:masiha_doctor/screens/home/home.dart';
 import 'package:masiha_doctor/screens/login_signup/all_set.dart';
@@ -48,6 +49,8 @@ class MyApp extends StatelessWidget {
         '/addDetails': (context) => const DoctorDetailsPage(),
         '/doctor-profile-setup': (context) => const DoctorProfileSetupScreen(),
         '/availability-setup': (context) => const AvailabilitySetupScreen(),
+        '/consultation-fee-setup': (context) =>
+            const ConsultationFeeSetupScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,

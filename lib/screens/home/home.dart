@@ -29,49 +29,82 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
+        print('No user logged in');
         Navigator.pushReplacementNamed(context, '/login');
         return;
       }
+
+      print('Checking status for user: ${user.uid}');
 
       // Listen to real-time updates
       FirebaseFirestore.instance
           .collection('doctorRequests')
           .where('userId', isEqualTo: user.uid)
+          // Add ordering to get the most recent request first
+          .orderBy('submittedAt', descending: true)
+          // Limit to 1 to get only the most recent request
+          .limit(1)
           .snapshots()
           .listen(
         (snapshot) {
+          print('Received snapshot with ${snapshot.docs.length} documents');
+
           if (snapshot.docs.isNotEmpty) {
             final requestData = snapshot.docs.first.data();
-            setState(() {
-              _requestStatus = RequestStatus.values.firstWhere(
-                (status) =>
-                    status.toString().split('.').last ==
-                    requestData['requestStatus'],
-                orElse: () => RequestStatus.pending,
-              );
-              _doctorId = snapshot.docs.first.id;
-              _isLoading = false;
-              _error = null;
-            });
+            final String statusString =
+                requestData['requestStatus'] ?? 'pending';
+            print('Raw status from Firestore: $statusString');
+
+            RequestStatus status;
+            switch (statusString.toLowerCase()) {
+              case 'approved':
+                status = RequestStatus.approved;
+                break;
+              case 'rejected':
+                status = RequestStatus.rejected;
+                break;
+              default:
+                status = RequestStatus.pending;
+            }
+
+            print('Converted to enum: $status');
+
+            if (mounted) {
+              setState(() {
+                _requestStatus = status;
+                _doctorId = snapshot.docs.first.id;
+                _isLoading = false;
+                _error = null;
+              });
+            }
           } else {
-            setState(() {
-              _isLoading = false;
-              _error = 'No request found. Please submit your details.';
-            });
+            print('No doctor request found for user ${user.uid}');
+            if (mounted) {
+              setState(() {
+                _isLoading = false;
+                _error = 'No request found. Please submit your details.';
+              });
+            }
           }
         },
         onError: (error) {
-          setState(() {
-            _isLoading = false;
-            _error = 'Error checking request status: $error';
-          });
+          print('Error in snapshot listener: $error');
+          if (mounted) {
+            setState(() {
+              _isLoading = false;
+              _error = 'Error checking request status: $error';
+            });
+          }
         },
       );
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _error = 'Error: $e';
-      });
+      print('Exception in _checkRequestStatus: $e');
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _error = 'Error: $e';
+        });
+      }
     }
   }
 
@@ -289,6 +322,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icons.calendar_today,
                   onPressed: () {
                     Navigator.pushNamed(context, '/availability-setup');
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                _buildStyledButton(
+                  text: 'Set Consultaion fee',
+                  icon: Icons.calendar_today,
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/consultation-fee-setup');
                   },
                 ),
               ],
