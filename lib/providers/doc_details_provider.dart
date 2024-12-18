@@ -148,20 +148,6 @@ class DoctorDetailsProvider extends ChangeNotifier {
     return null;
   }
 
-  // bool validateAvailableDays() {
-  //   if (_doctor.availableDays == null || _doctor.availableDays!.isEmpty) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
-  // bool validateWorkingHours() {
-  //   if (_doctor.workingTimeStart == null || _doctor.workingTimeEnd == null) {
-  //     return false;
-  //   }
-  //   return _doctor.workingTimeEnd!.isAfter(_doctor.workingTimeStart!);
-  // }
-
   bool validateEducation() {
     if (_doctor.educations == null || _doctor.educations!.isEmpty) {
       return false;
@@ -208,17 +194,6 @@ class DoctorDetailsProvider extends ChangeNotifier {
     }
   }
 
-  // Future<String> saveImageLocally(File imageFile) async {
-  //   try {
-  //     final directory = await getApplicationDocumentsDirectory();
-  //     final fileName =
-  //         'profile_${DateTime.now().millisecondsSinceEpoch}${path.extension(imageFile.path)}';
-  //     final savedImage = await imageFile.copy('${directory.path}/$fileName');
-  //     return savedImage.path;
-  //   } catch (e) {
-  //     throw Exception('Failed to save image locally');
-  //   }
-  // }
   Future<String> updateDoctorImage(File imageFile) async {
     try {
       final cloudinaryUrl =
@@ -351,25 +326,54 @@ class DoctorDetailsProvider extends ChangeNotifier {
     }
   }
 
+  // Future<void> saveToFirestore(
+  //     String collection, Map<String, dynamic> data) async {
+  //   await FirebaseFirestore.instance.collection(collection).add(data);
+  // }
   Future<void> saveToFirestore(
       String collection, Map<String, dynamic> data) async {
-    await FirebaseFirestore.instance.collection(collection).add(data);
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) throw Exception('User not authenticated');
+
+    await FirebaseFirestore.instance
+        .collection(collection)
+        .doc(userId) // Use the current user's ID as the document ID
+        .set(data,
+            SetOptions(merge: true)); // Merge the new data with existing data
   }
 
+  // Future<void> saveDoctorRequest() async {
+  //   final userId = FirebaseAuth.instance.currentUser?.uid;
+  //   if (userId == null) throw Exception('User not authenticated');
+
+  //   final docRef =
+  //       await FirebaseFirestore.instance.collection('doctorRequests').add({
+  //     ...(_doctor.toJson()),
+  //     'userId': userId, // Add this line
+  //     'requestStatus': RequestStatus.pending.name,
+  //     'submittedAt': FieldValue.serverTimestamp(),
+  //     'updatedAt': FieldValue.serverTimestamp(),
+  //   });
+
+  //   _doctor.requestId = docRef.id;
+  //   _doctor.requestStatus = RequestStatus.pending;
+  // }
   Future<void> saveDoctorRequest() async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) throw Exception('User not authenticated');
 
-    final docRef =
-        await FirebaseFirestore.instance.collection('doctorRequests').add({
+    await FirebaseFirestore.instance
+        .collection('doctorRequests')
+        .doc(userId) // Use the current user's ID as the document ID
+        .set({
       ...(_doctor.toJson()),
-      'userId': userId, // Add this line
+      'userId': userId,
       'requestStatus': RequestStatus.pending.name,
       'submittedAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
-    });
+    }, SetOptions(merge: true)); // Merge the new data with existing data
 
-    _doctor.requestId = docRef.id;
+    _doctor.requestId = userId;
     _doctor.requestStatus = RequestStatus.pending;
   }
 

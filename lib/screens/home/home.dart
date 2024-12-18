@@ -317,22 +317,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 16),
 
-                _buildStyledButton(
-                  text: 'Set Availability',
-                  icon: Icons.calendar_today,
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/availability-setup');
-                  },
-                ),
+                // _buildStyledButton(
+                //   text: 'Set Availability',
+                //   icon: Icons.calendar_today,
+                //   onPressed: () {
+                //     Navigator.pushNamed(context, '/availability-setup');
+                //   },
+                // ),
                 const SizedBox(height: 16),
 
-                _buildStyledButton(
-                  text: 'Set Consultaion fee',
-                  icon: Icons.calendar_today,
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/consultation-fee-setup');
-                  },
-                ),
+                // _buildStyledButton(
+                //   text: 'Set Consultaion fee',
+                //   icon: Icons.calendar_today,
+                //   onPressed: () {
+                //     Navigator.pushNamed(context, '/consultation-fee-setup');
+                //   },
+                // ),
               ],
             ),
           ),
