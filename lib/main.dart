@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:masiha_doctor/firebase_options.dart';
 import 'package:masiha_doctor/providers/doc_details_provider.dart';
+import 'package:masiha_doctor/providers/doctor_profile_provider.dart';
 import 'package:masiha_doctor/screens/add_details.dart';
 import 'package:masiha_doctor/screens/doctor/availability.dart';
 import 'package:masiha_doctor/screens/doctor/consultation_fee.dart';
@@ -26,6 +27,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => DoctorDetailsProvider()),
+        ChangeNotifierProvider(create: (_) => DoctorProfileProvider()),
       ],
       child: const MyApp(),
     ),
@@ -48,9 +50,9 @@ class MyApp extends StatelessWidget {
         '/forgotpass': (context) => const ForgotPasswordScreen(),
         '/addDetails': (context) => const DoctorDetailsPage(),
         '/doctor-profile-setup': (context) => const DoctorProfileSetupScreen(),
-        '/availability-setup': (context) => const AvailabilitySetupScreen(),
-        '/consultation-fee-setup': (context) =>
-            const ConsultationFeeSetupScreen(),
+        //'/availability-setup': (context) => const AvailabilitySetupScreen(),
+        //'/consultation-fee-setup': (context) =>
+        //    const ConsultationFeeSetupScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,
