@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:masiha_doctor/consts/colors.dart';
 import 'package:masiha_doctor/models/doctor_model.dart';
+import 'package:masiha_doctor/screens/home/main_screen_view.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -241,104 +242,89 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Widget _buildApprovedView() {
+  //   return Scaffold(
+  //     backgroundColor: Colors.white,
+  //     body: SafeArea(
+  //       child: Center(
+  //         child: SingleChildScrollView(
+  //           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             crossAxisAlignment: CrossAxisAlignment.center,
+  //             children: [
+  //               // Animated Check Icon
+  //               TweenAnimationBuilder(
+  //                 duration: const Duration(milliseconds: 800),
+  //                 tween: Tween<double>(begin: 0, end: 1),
+  //                 builder: (context, double value, child) {
+  //                   return Transform.scale(
+  //                     scale: value,
+  //                     child: Container(
+  //                       decoration: BoxDecoration(
+  //                         shape: BoxShape.circle,
+  //                         boxShadow: [
+  //                           BoxShadow(
+  //                             color: Colors.green.withOpacity(0.3),
+  //                             spreadRadius: 5,
+  //                             blurRadius: 15,
+  //                           )
+  //                         ],
+  //                       ),
+  //                       child: const Icon(
+  //                         Icons.check_circle,
+  //                         size: 120,
+  //                         color: Colors.green,
+  //                       ),
+  //                     ),
+  //                   );
+  //                 },
+  //               ),
+
+  //               const SizedBox(height: 32),
+
+  //               // Welcome Text
+  //               Text(
+  //                 'Account Approved!',
+  //                 style: GoogleFonts.montserrat(
+  //                   fontSize: 24,
+  //                   fontWeight: FontWeight.w700,
+  //                   color: Colors.black87,
+  //                 ),
+  //                 textAlign: TextAlign.center,
+  //               ),
+
+  //               const SizedBox(height: 16),
+
+  //               Text(
+  //                 'Congratulations! Your professional account has been verified.',
+  //                 style: GoogleFonts.openSans(
+  //                   fontSize: 16,
+  //                   color: Colors.black54,
+  //                 ),
+  //                 textAlign: TextAlign.center,
+  //               ),
+
+  //               const SizedBox(height: 40),
+
+  //               // Action Buttons
+  //               _buildStyledButton(
+  //                 text: 'Complete Your Profile',
+  //                 icon: Icons.person_outline,
+  //                 onPressed: () {
+  //                   Navigator.pushNamed(context, '/doctor-profile-setup');
+  //                 },
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+
+  //       ),
+  //     ),
+  //   );
+  // }
   Widget _buildApprovedView() {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Animated Check Icon
-                TweenAnimationBuilder(
-                  duration: const Duration(milliseconds: 800),
-                  tween: Tween<double>(begin: 0, end: 1),
-                  builder: (context, double value, child) {
-                    return Transform.scale(
-                      scale: value,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.green.withOpacity(0.3),
-                              spreadRadius: 5,
-                              blurRadius: 15,
-                            )
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.check_circle,
-                          size: 120,
-                          color: Colors.green,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-
-                const SizedBox(height: 32),
-
-                // Welcome Text
-                Text(
-                  'Account Approved!',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black87,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-
-                const SizedBox(height: 16),
-
-                Text(
-                  'Congratulations! Your professional account has been verified.',
-                  style: GoogleFonts.openSans(
-                    fontSize: 16,
-                    color: Colors.black54,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-
-                const SizedBox(height: 40),
-
-                // Action Buttons
-                _buildStyledButton(
-                  text: 'Complete Your Profile',
-                  icon: Icons.person_outline,
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/doctor-profile-setup');
-                  },
-                ),
-
-                const SizedBox(height: 16),
-
-                // _buildStyledButton(
-                //   text: 'Set Availability',
-                //   icon: Icons.calendar_today,
-                //   onPressed: () {
-                //     Navigator.pushNamed(context, '/availability-setup');
-                //   },
-                // ),
-                const SizedBox(height: 16),
-
-                // _buildStyledButton(
-                //   text: 'Set Consultaion fee',
-                //   icon: Icons.calendar_today,
-                //   onPressed: () {
-                //     Navigator.pushNamed(context, '/consultation-fee-setup');
-                //   },
-                // ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return const MainScreenView(); // Simply return the MainScreenView
   }
 
   @override
