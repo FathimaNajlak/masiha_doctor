@@ -1,7 +1,8 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:masiha_doctor/services/cloudinary_service.dart';
-
 import 'package:path/path.dart' as path;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class DoctorDetailsProvider extends ChangeNotifier {
     'Emergency Medicine',
     'General Dentistry',
   ];
-  final DoctorDetailsModel _doctor = DoctorDetailsModel();
+  DoctorDetailsModel _doctor = DoctorDetailsModel();
   final CloudinaryService _cloudinaryService = CloudinaryService();
 
   File? _imageFile;
@@ -42,7 +43,7 @@ class DoctorDetailsProvider extends ChangeNotifier {
   String? _imageError;
   final List<File> _certificateFiles = [];
 
-  // Getters
+  //
   DoctorDetailsModel get doctor => _doctor;
   File? get imageFile => _imageFile;
   GlobalKey<FormState> get formKey => _formKey;
@@ -118,15 +119,6 @@ class DoctorDetailsProvider extends ChangeNotifier {
     return null;
   }
 
-  // String? validateSpeciality(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Speciality is required';
-  //   }
-  //   if (value.length < 3) {
-  //     return 'speciality must be at least 3 characters';
-  //   }
-  //   return null;
-  // }
   String? validateSpeciality(String? value) {
     if (value == null || value.isEmpty) {
       return 'Specialty is required';
@@ -319,7 +311,7 @@ class DoctorDetailsProvider extends ChangeNotifier {
         final certificateFile = File(education.certificatePath!);
         if (await certificateFile.exists()) {
           final savedCertificatePath = await updateDoctorImage(certificateFile);
-          // final savedCertificatePath = await saveImageLocally(certificateFile);
+
           education.certificatePath = savedCertificatePath;
         }
       }
@@ -337,9 +329,8 @@ class DoctorDetailsProvider extends ChangeNotifier {
 
     await FirebaseFirestore.instance
         .collection(collection)
-        .doc(userId) // Use the current user's ID as the document ID
-        .set(data,
-            SetOptions(merge: true)); // Merge the new data with existing data
+        .doc(userId)
+        .set(data, SetOptions(merge: true));
   }
 
   // Future<void> saveDoctorRequest() async {
@@ -349,7 +340,7 @@ class DoctorDetailsProvider extends ChangeNotifier {
   //   final docRef =
   //       await FirebaseFirestore.instance.collection('doctorRequests').add({
   //     ...(_doctor.toJson()),
-  //     'userId': userId, // Add this line
+  //     'userId': userId,
   //     'requestStatus': RequestStatus.pending.name,
   //     'submittedAt': FieldValue.serverTimestamp(),
   //     'updatedAt': FieldValue.serverTimestamp(),
@@ -358,13 +349,14 @@ class DoctorDetailsProvider extends ChangeNotifier {
   //   _doctor.requestId = docRef.id;
   //   _doctor.requestStatus = RequestStatus.pending;
   // }
+
   Future<void> saveDoctorRequest() async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) throw Exception('User not authenticated');
 
     await FirebaseFirestore.instance
         .collection('doctorRequests')
-        .doc(userId) // Use the current user's ID as the document ID
+        .doc(userId)
         .set({
       ...(_doctor.toJson()),
       'userId': userId,
@@ -380,5 +372,36 @@ class DoctorDetailsProvider extends ChangeNotifier {
   void setLoadingState(bool isLoading) {
     _isLoading = isLoading;
     notifyListeners();
+  }
+
+  Future<void> fetchDoctorDetails() async {
+    setLoadingState(true);
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) throw Exception('User not authenticated');
+
+      final doctorDoc = await FirebaseFirestore.instance
+          .collection('doctors')
+          .doc(userId)
+          .get();
+
+      if (doctorDoc.exists) {
+        final data = doctorDoc.data() as Map<String, dynamic>;
+        // Use the factory constructor instead of fromJson method
+        _doctor = DoctorDetailsModel.fromJson(data);
+
+        // If there's an image URL, we need to show it
+        if (_doctor.imagePath != null && _doctor.imagePath!.isNotEmpty) {
+          _imageFile = null; // Reset image file since we're using URL
+        }
+
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error fetching doctor details: $e');
+      rethrow;
+    } finally {
+      setLoadingState(false);
+    }
   }
 }
