@@ -1,11 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:masiha_doctor/firebase_options.dart';
 import 'package:masiha_doctor/providers/doc_details_provider.dart';
 import 'package:masiha_doctor/providers/doctor_profile_provider.dart';
 import 'package:masiha_doctor/screens/add_details.dart';
-import 'package:masiha_doctor/screens/doctor/availability.dart';
-import 'package:masiha_doctor/screens/doctor/consultation_fee.dart';
+
 import 'package:masiha_doctor/screens/doctor/details.dart';
 import 'package:masiha_doctor/screens/home/home.dart';
 import 'package:masiha_doctor/screens/login_signup/all_set.dart';
@@ -28,6 +28,10 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => DoctorDetailsProvider()),
         ChangeNotifierProvider(create: (_) => DoctorProfileProvider()),
+        StreamProvider<User?>.value(
+          value: FirebaseAuth.instance.authStateChanges(),
+          initialData: null,
+        ),
       ],
       child: const MyApp(),
     ),

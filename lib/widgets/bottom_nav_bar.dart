@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:masiha_doctor/consts/colors.dart';
 import 'package:masiha_doctor/screens/home/appointments_screen.dart';
+import 'package:masiha_doctor/screens/home/profile/profile_screen.dart';
+import 'package:masiha_doctor/screens/home/report_screen.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   const CustomBottomNavBar({super.key});
@@ -18,10 +20,16 @@ class CustomBottomNavBar extends StatelessWidget {
         ); // Replace with your route
         break;
       case 2:
-        Navigator.pushNamed(context, '/favorite'); // Replace with your route
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const DoctorReportsScreen()),
+        ); // Replace with your route
         break;
       case 3:
-        Navigator.pushNamed(context, '/profile'); // Replace with your route
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const DoctorProfileScreen()),
+        ); // Replace with your route
         break;
       default:
         break;

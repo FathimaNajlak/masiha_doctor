@@ -59,6 +59,25 @@ class DoctorAppointmentsProvider with ChangeNotifier {
     }
   }
 
+  Future<void> cancelAppointment(String appointmentId) async {
+    if (_isLoading) return;
+
+    try {
+      _setLoading(true);
+
+      await _firestore.collection('appointments').doc(appointmentId).update({
+        'status': 'cancelled',
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      _error = 'Failed to cancel appointment: $e';
+      notifyListeners();
+      rethrow;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   void _setLoading(bool value) {
     _isLoading = value;
     notifyListeners();

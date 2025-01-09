@@ -34,7 +34,7 @@ class DoctorDetailsProvider extends ChangeNotifier {
     'Emergency Medicine',
     'General Dentistry',
   ];
-  final DoctorDetailsModel _doctor = DoctorDetailsModel();
+  DoctorDetailsModel _doctor = DoctorDetailsModel();
   final CloudinaryService _cloudinaryService = CloudinaryService();
 
   File? _imageFile;
@@ -372,5 +372,36 @@ class DoctorDetailsProvider extends ChangeNotifier {
   void setLoadingState(bool isLoading) {
     _isLoading = isLoading;
     notifyListeners();
+  }
+
+  Future<void> fetchDoctorDetails() async {
+    setLoadingState(true);
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) throw Exception('User not authenticated');
+
+      final doctorDoc = await FirebaseFirestore.instance
+          .collection('doctors')
+          .doc(userId)
+          .get();
+
+      if (doctorDoc.exists) {
+        final data = doctorDoc.data() as Map<String, dynamic>;
+        // Use the factory constructor instead of fromJson method
+        _doctor = DoctorDetailsModel.fromJson(data);
+
+        // If there's an image URL, we need to show it
+        if (_doctor.imagePath != null && _doctor.imagePath!.isNotEmpty) {
+          _imageFile = null; // Reset image file since we're using URL
+        }
+
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error fetching doctor details: $e');
+      rethrow;
+    } finally {
+      setLoadingState(false);
+    }
   }
 }

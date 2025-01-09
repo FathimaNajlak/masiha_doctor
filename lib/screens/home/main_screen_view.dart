@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:masiha_doctor/screens/home/appointments_screen.dart';
+import 'package:masiha_doctor/screens/home/profile/profile_screen.dart';
+import 'package:masiha_doctor/screens/home/report_screen.dart';
 import 'package:masiha_doctor/widgets/bottom_nav_bar.dart';
 
 class MainScreenView extends StatefulWidget {
@@ -39,7 +42,7 @@ class _MainScreenViewState extends State<MainScreenView> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Your account has been approved. Complete your profile to get started.',
+                      'Your account has been approved',
                       style: GoogleFonts.openSans(
                         fontSize: 16,
                         color: Colors.black54,
@@ -50,19 +53,19 @@ class _MainScreenViewState extends State<MainScreenView> {
                     const SizedBox(height: 48),
 
                     // Message Illustration
-                    Container(
-                      height: 200,
-                      width: 200,
-                      decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.mark_email_unread_outlined,
-                        size: 80,
-                        color: Colors.blue,
-                      ),
-                    ),
+                    // Container(
+                    //   height: 200,
+                    //   width: 200,
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.blue.withOpacity(0.1),
+                    //     shape: BoxShape.circle,
+                    //   ),
+                    //   child: const Icon(
+                    //     Icons.mark_email_unread_outlined,
+                    //     size: 80,
+                    //     color: Colors.blue,
+                    //   ),
+                    // ),
 
                     const SizedBox(height: 48),
 
@@ -86,10 +89,10 @@ class _MainScreenViewState extends State<MainScreenView> {
                           ),
                           const SizedBox(height: 16),
                           ListTile(
-                            leading: const Icon(Icons.person_outline,
+                            leading: const Icon(Icons.edit_document,
                                 color: Colors.blue),
                             title: Text(
-                              'Complete / edit Profile',
+                              'Complete / edit details',
                               style: GoogleFonts.openSans(
                                   fontWeight: FontWeight.w500),
                             ),
@@ -101,6 +104,65 @@ class _MainScreenViewState extends State<MainScreenView> {
                             },
                           ),
                           const Divider(),
+                          ListTile(
+                            leading: const Icon(Icons.access_time,
+                                color: Colors.blue),
+                            title: Text(
+                              'Go to your appointments',
+                              style: GoogleFonts.openSans(
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            trailing:
+                                const Icon(Icons.arrow_forward_ios, size: 16),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const DoctorAppointmentsScreen()),
+                              );
+                            },
+                          ),
+                          const Divider(),
+                          ListTile(
+                            leading: const Icon(Icons.trending_up,
+                                color: Colors.blue),
+                            title: Text(
+                              'See your reports',
+                              style: GoogleFonts.openSans(
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            trailing:
+                                const Icon(Icons.arrow_forward_ios, size: 16),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const DoctorReportsScreen()),
+                              );
+                            },
+                          ),
+                          const Divider(),
+                          ListTile(
+                            leading: const Icon(Icons.person_outline,
+                                color: Colors.blue),
+                            title: Text(
+                              'Your Profile',
+                              style: GoogleFonts.openSans(
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            trailing:
+                                const Icon(Icons.arrow_forward_ios, size: 16),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const DoctorProfileScreen()),
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -111,7 +173,6 @@ class _MainScreenViewState extends State<MainScreenView> {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavBar(),
     );
   }
 }
